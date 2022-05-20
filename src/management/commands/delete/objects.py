@@ -25,37 +25,22 @@ from korth_spirit import Instance
 from korth_spirit.data import ObjectDeleteData
 from korth_spirit.query import QueryEnum
 from korth_spirit.sdk import aw_object_delete
+from management.commands.iterator import Iterator
 
 
-class DeleteObjects:
-    def __init__(
-        self,
-        instance: Instance,
-    ):
+class DeleteObjects(Iterator):
+    def __init__(self, instance: Instance):
         """
         Initializes the Delete Objects command.
 
         Args:
             instance (Instance): The instance.
-        """        
+        """
         self._instance = instance
 
-    def execute(self):
-        """
-        Executes the command.
-        """
-        logging.info('Deleting objects')
-        on_each(
-            self._instance.query(
-                QueryEnum.OBJECT
-            ),
+        super().__init__(
+            self._instance.query(QueryEnum.OBJECT),
             lambda data: aw_object_delete(
-                ObjectDeleteData
-                (
-                    number=data.number,
-                    x=data.x,
-                    z=data.z,
-                )
-            ),
-            ignore_exceptions=True,
+                ObjectDeleteData(data.number, data.x, data.z)
+            )
         )
