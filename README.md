@@ -4,11 +4,11 @@ Libraries and tools relating to a world's management inside of Active Worlds and
 
 # Notice
 
-Th(is|ese) program(s) are written (Spirit of Korth | Korth-Spirit)'s Software Development Wrapper for Active Worlds to interact with the [Active Worlds](https://www.activeworlds.com). This project and/or its contributors are not affiliated with Active Worlds. By using the active worlds SDK, you are agreeing to the terms of the [Active Worlds SDK License Agreement](https://www.activeworlds.com/sdk/download.htm).
+Th(is | ese) program(s) are written (Spirit of Korth | Korth-Spirit)'s Software Development Wrapper for Active Worlds to interact with the [Active Worlds](https://www.activeworlds.com). This project and/or its contributors are not affiliated with Active Worlds. By using the active worlds SDK, you are agreeing to the terms of the [Active Worlds SDK License Agreement](https://www.activeworlds.com/sdk/download.htm).
 
 # License
 
-This project is licen sed under the MIT license.
+This project is licensed under the MIT license.
 
 # Contribution
 
