@@ -35,7 +35,7 @@ def register(invoker: Invoker, instance: Instance, args: Namespace):
         args (Namespace): The arguments to use for the commands.
     """
     def _factory(query_type: str, file_name: str = args.file):
-        return C.SaveQuery(instance, query_type, file_name, args.binary)
+        return C.Save(instance, query_type, file_name, args.binary)
 
     invoker\
         .register("SAVE ATTRIBUTES", _factory('attributes'))\

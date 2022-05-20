@@ -28,7 +28,7 @@ from korth_spirit import Instance
 from korth_spirit.query import QueryEnum
 
 
-class SaveQuery:
+class Save:
     def __init__(
         self,
         instance: Instance,

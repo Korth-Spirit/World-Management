@@ -21,9 +21,9 @@
 
 __all__ = [
     'Aggregate',
-    'SaveQuery'
+    'Save'
 ]
 
 
 from .aggregate import Aggregate
-from .save_query import SaveQuery
+from .save import Save
