@@ -20,6 +20,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import json
 import logging
+from dataclasses import asdict
 
 from common.file import append_to
 from common.func import on_each
@@ -31,7 +32,7 @@ class SaveQuery:
     def __init__(
         self,
         instance: Instance,
-        query_type: QueryEnum,
+        query_type: str,
         file_name: str = 'backup.json',
         binary_mode: bool = False
     ):
@@ -40,12 +41,18 @@ class SaveQuery:
 
         Args:
             instance (Instance): The instance.
-            query_type (QueryEnum): The type of query to perform.
+            query_type (str): The type of query to perform. { "attributes", "objects", "terrain" }
             file_name (str): The file name.
             binary_mode (bool): Whether or not to save the data in binary mode.
-        """        
+        """
+        _query = query_type\
+            .upper()\
+            .removesuffix('S')\
+            .replace('ATTRIBUTE', 'WORLD')
+
         self._instance = instance
-        self._query = query_type
+        self._type = query_type
+        self._query = QueryEnum[_query]
         self._file_name = file_name
         self._binary_mode = binary_mode
     
@@ -53,18 +60,18 @@ class SaveQuery:
         """
         Executes the command.
         """
-        logging.info(f'Saving {self._query} to {self._file_name}')
+        def _receive(data):
+            data = json.dumps(asdict(data), skipkeys=True, default=str)
+
+            if self._binary_mode:
+                data = data.encode('utf-8')
+
+            append_to(self._file_name, data)
+
+        logging.info(f'Saving {self._type} to {self._file_name}')
+        
         on_each(
-            self._instance.query(
-                self._query
-            ),
-            lambda data: append_to(
-                self._file_name,
-                json.dumps(data.__dict__)
-                if not self._binary_mode
-                else json.dumps(
-                    data.__dict__,
-                ).encode('utf-8'),
-            ),
+            self._instance.query(self._query),
+            _receive,
             ignore_exceptions=True
         ) 

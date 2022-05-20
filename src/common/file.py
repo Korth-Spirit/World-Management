@@ -20,6 +20,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import json
+import logging
 
 
 def append_to(file: str, data: str | bytes) -> None:
@@ -34,6 +35,7 @@ def append_to(file: str, data: str | bytes) -> None:
     mode = "ab+" if type(data) == bytes else "a+"
 
     with open(file, mode) as f:
+        logging.debug(f"Appending {data} to {file}")
         f.write(data)
 
         if type(data) == bytes:

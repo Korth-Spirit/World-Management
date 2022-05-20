@@ -20,9 +20,8 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from argparse import Namespace
 
-import management.commands.save as commands
 from korth_spirit.instance import Instance
-from management.commands import Aggregate as AggregateCommand
+import management.commands as C
 from management.protocols import Invoker
 
 
@@ -35,33 +34,18 @@ def register(invoker: Invoker, instance: Instance, args: Namespace):
         instance (ReceiverInstance): The instance to use for the commands.
         args (Namespace): The arguments to use for the commands.
     """
+    def _factory(query_type: str, file_name: str = args.file):
+        return C.SaveQuery(instance, query_type, file_name, args.binary)
 
-    kwargs = {
-        "instance": instance,
-        "file_name": args.file,
-        "binary_mode": args.binary
-    }
     invoker\
-        .register(
-            "SAVE ATRRIBUTES",
-            commands.SaveAttributes(**kwargs)
-        )\
-        .register(
-            "SAVE OBJECTS",
-            commands.SaveObjects(**kwargs)
-        ).register(
-            "SAVE TERRAIN",
-            commands.SaveTerrain(**kwargs)
-        )
-
-    file_name = args.file
-    kwargs.pop("file_name")
-    invoker\
+        .register("SAVE ATTRIBUTES", _factory('attributes'))\
+        .register("SAVE OBJECTS", _factory('objects'))\
+        .register("SAVE TERRAIN", _factory(query_type='terrain'))\
         .register(
             "SAVE ALL",
-            AggregateCommand(
-                commands.SaveAttributes(**kwargs, file_name=f"attributes_{file_name}"),
-                commands.SaveObjects(**kwargs, file_name=f"objects_{file_name}"),
-                commands.SaveTerrain(**kwargs, file_name=f"terrain_{file_name}")
+            C.Aggregate(
+                _factory('attributes', f"{args.file}_attributes"),
+                _factory('objects', f"{args.file}_objects"),
+                _factory('terrain', f"{args.file}_terrain")
             )
         )

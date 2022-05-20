@@ -21,7 +21,9 @@
 
 __all__ = [
     'Aggregate',
+    'SaveQuery'
 ]
 
 
 from .aggregate import Aggregate
+from .save_query import SaveQuery
