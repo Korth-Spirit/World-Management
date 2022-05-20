@@ -18,9 +18,6 @@
 # LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-import logging
-
-from common.func import on_each
 from korth_spirit import Instance
 from korth_spirit.data import ObjectDeleteData
 from korth_spirit.query import QueryEnum
