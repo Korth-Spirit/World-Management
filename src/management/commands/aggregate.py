@@ -26,7 +26,7 @@ import logging
 class Aggregate:
     def __init__(
         self,
-        *commands: tuple
+        *commands: tuple[Command]
     ):
         """
         Initializes the aggregate command.
@@ -44,4 +44,3 @@ class Aggregate:
         for command in self._commands:
             command.execute()
         logging.info('Finished bulk executing commands.')
-
