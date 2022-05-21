@@ -24,42 +24,13 @@ from dataclasses import asdict
 
 from common.file import append_to
 from common.func import on_each
-from korth_spirit import Instance
-from korth_spirit.query import QueryEnum
+from .file_abc import FileABC
 
 
-class Save:
-    def __init__(
-        self,
-        instance: Instance,
-        query_type: str,
-        file_name: str = 'backup.json',
-        binary_mode: bool = False
-    ):
-        """
-        Initializes the Save Query command.
-
-        Args:
-            instance (Instance): The instance.
-            query_type (str): The type of query to perform. { "attributes", "objects", "terrain" }
-            file_name (str): The file name.
-            binary_mode (bool): Whether or not to save the data in binary mode.
-        """
-        _query = query_type\
-            .upper()\
-            .removesuffix('S')\
-            .replace('ATTRIBUTE', 'WORLD')
-
-        self._instance = instance
-        self._type = query_type
-        self._query = QueryEnum[_query]
-        self._file_name = file_name
-        self._binary_mode = binary_mode
-    
+class Save(FileABC):
     def execute(self):
-        """
-        Executes the command.
-        """
+        logging.info(f'Saving {self._type} to {self._file_name}')
+
         def _receive(data):
             data = json.dumps(asdict(data), skipkeys=True, default=str)
 
@@ -67,8 +38,6 @@ class Save:
                 data = data.encode('utf-8')
 
             append_to(self._file_name, data)
-
-        logging.info(f'Saving {self._type} to {self._file_name}')
         
         on_each(
             self._instance.query(self._query),
