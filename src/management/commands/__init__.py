@@ -21,9 +21,11 @@
 
 __all__ = [
     'Aggregate',
-    'Save'
+    'Save',
+    'Load',
 ]
 
 
 from .aggregate import Aggregate
+from .load import Load
 from .save import Save

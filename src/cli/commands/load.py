@@ -20,7 +20,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from argparse import Namespace
 
-import management.commands.load as commands
+import management.commands as C
 from korth_spirit.instance import Instance
 from management.protocols import Invoker
 
@@ -34,28 +34,19 @@ def register(invoker: Invoker, instance: Instance, args: Namespace):
         instance (ReceiverInstance): The instance to use for the commands.
         args (Namespace): The arguments to use for the commands.
     """
+    def _factory(query_type: str, file_name: str = args.file):
+        return C.Load(instance, query_type, file_name, args.binary)
+
     invoker\
+        .register("LOAD ATTRIBUTES", _factory('attributes'))\
+        .register("LOAD OBJECTS", _factory('objects'))\
+        .register("LOAD TERRAIN", _factory(query_type='terrain'))\
         .register(
-            "LOAD OBJECTS",
-            commands.LoadObjects(
-                instance=instance,
-                file_name=args.file,
-                binary_mode=args.binary
-            )
-        )\
-        .register(
-            "LOAD ATTRIBUTES",
-            commands.LoadAttributes(
-                instance=instance,
-                file_name=args.file,
-                binary_mode=args.binary
-            )
-        )\
-        .register(
-            'LOAD TERRAIN',
-            commands.LoadTerrain(
-                instance=instance,
-                file_name=args.file,
-                binary_mode=args.binary
+            "LOAD ALL",
+            C.Aggregate(
+                _factory('attributes', f"{args.file}_attributes"),
+                _factory('objects', f"{args.file}_objects"),
+                _factory('terrain', f"{args.file}_terrain")
             )
         )
+

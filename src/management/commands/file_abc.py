@@ -18,52 +18,36 @@
 # LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-import json
-import logging
+from abc import ABC
 
-from common.file import load
-from common.func import on_each
 from korth_spirit import Instance
 from korth_spirit.query import QueryEnum
 
 
-class LoadQuery:
+class FileABC(ABC):
     def __init__(
         self,
         instance: Instance,
-        query_type: QueryEnum,
-        load_function: callable,
+        query_type: str,
         file_name: str = 'backup.json',
         binary_mode: bool = False
     ):
         """
-        Initializes the Load Query command.
+        Initializes the Save Query command.
 
         Args:
             instance (Instance): The instance.
-            query_type (QueryEnum): The type of query to perform.
-            load_function (callable): The function to use to load the data.
+            query_type (str): The type of query to perform. { "attributes", "objects", "terrain" }
             file_name (str): The file name.
-            binary_mode (bool): Whether or not to load the data in binary mode
-        """        
+            binary_mode (bool): Whether or not to save the data in binary mode.
+        """
+        _query = query_type\
+            .upper()\
+            .removesuffix('S')\
+            .replace('ATTRIBUTE', 'WORLD')
+
         self._instance = instance
-        self._query = query_type
+        self._type = query_type
+        self._query = QueryEnum[_query]
         self._file_name = file_name
         self._binary_mode = binary_mode
-        self._load_function = load_function
-    
-    def execute(self):
-        """
-        Executes the command.
-        """
-        logging.info(f'Loading {self._query} from {self._file_name}')
-        def _receive(data: dict):
-            self._load_function(data)
-
-        on_each(
-            load(
-                self._file_name,
-                self._binary_mode
-            ),
-            _receive
-        ) 
