@@ -90,13 +90,8 @@ def main() -> None:
     if arguments.verbose:
         logging.basicConfig(level=logging.DEBUG)
 
-    actor = LocalInvoker()
     with ReceiverInstance() as instance:
-        register_commands(
-            actor,
-            instance,
-            arguments
-        )
+        actor = LocalInvoker.create_loaded(instance)
 
         action = 'LOAD' if arguments.load else 'SAVE'
         action = 'DELETE' if arguments.delete else action

@@ -18,6 +18,8 @@
 # LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+from korth_spirit import Instance
+from management.invoker.registration import register
 from management.protocols import Command
 
 
@@ -87,3 +89,21 @@ class LocalInvoker:
         self._history.append(command)
 
         return self
+
+    @staticmethod
+    def create_loaded(instance: Instance) -> "LocalInvoker":
+        """
+        Creates a loaded instance of the LocalInvoker class
+        This invoker has preloaded commands targetting the instance.
+
+        Args:
+            instance (Instance): The instance.
+
+        Returns:
+            LocalInvoker: Fluent interface.
+        """
+        invoker = LocalInvoker()
+        
+        register(invoker, instance)
+
+        return invoker
