@@ -20,28 +20,30 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from argparse import Namespace
 
-import management.commands.delete as commands
+import management.commands as C
 from korth_spirit.instance import Instance
 from management.protocols import Invoker
 
 
-def register(invoker: Invoker, instance: Instance, args: Namespace):
+def register(invoker: Invoker):
     """
-    Registers deletion commands.
+    Registers load commands.
 
     Args:
         invoker (LocalInvoker): The invoker to register the commands with.
         instance (ReceiverInstance): The instance to use for the commands.
         args (Namespace): The arguments to use for the commands.
-    """    
+    """
     invoker\
+        .register("DELETE ATTRIBUTES", C.Delete('attributes'))\
+        .register("DELETE OBJECTS", C.Delete('objects'))\
+        .register("DELETE TERRAIN", C.Delete(query_type='terrain'))\
         .register(
-            "DELETE OBJECTS",
-            commands.DeleteObjects(
-                instance=instance
+            "DELETE ALL",
+            C.Aggregate(
+                C.Delete('attributes'),
+                C.Delete('objects'),
+                C.Delete('terrain')
             )
-        )\
-        .register(
-            'DELETE TERRAIN',
-            commands.DeleteTerrain()
         )
+

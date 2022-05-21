@@ -34,10 +34,7 @@ class Delete:
         Initializes the Save Query command.
 
         Args:
-            instance (Instance): The instance.
             query_type (str): The type of query to perform. { "attributes", "objects", "terrain" }
-            file_name (str): The file name.
-            binary_mode (bool): Whether or not to save the data in binary mode.
         """
         _query = query_type\
             .upper()\

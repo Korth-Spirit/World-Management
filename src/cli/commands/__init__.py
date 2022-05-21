@@ -43,6 +43,6 @@ def register(invoker: Invoker, instance: Instance, args: Namespace):
         instance (ReceiverInstance): The instance to use for the commands.
         args (Namespace): The arguments to use for the commands.
     """
-    register_delete(invoker, instance, args)
+    register_delete(invoker)
     register_load(invoker, instance, args)
     register_save(invoker, instance, args)
