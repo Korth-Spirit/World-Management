@@ -18,30 +18,12 @@
 # LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-from argparse import Namespace
-
-import management.commands.delete as commands
-from korth_spirit.instance import Instance
-from management.protocols import Invoker
+from korth_spirit.sdk import aw_terrain_delete_all
 
 
-def register(invoker: Invoker, instance: Instance, args: Namespace):
-    """
-    Registers deletion commands.
-
-    Args:
-        invoker (LocalInvoker): The invoker to register the commands with.
-        instance (ReceiverInstance): The instance to use for the commands.
-        args (Namespace): The arguments to use for the commands.
-    """    
-    invoker\
-        .register(
-            "DELETE OBJECTS",
-            commands.DeleteObjects(
-                instance=instance
-            )
-        )\
-        .register(
-            'DELETE TERRAIN',
-            commands.DeleteTerrain()
-        )
+class DeleteTerrain:
+    def execute(self):
+        """
+        Executes the Delete Objects command.
+        """
+        aw_terrain_delete_all()

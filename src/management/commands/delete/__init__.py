@@ -21,7 +21,9 @@
 
 __all__ = [
     'DeleteObjects',
+    'DeleteTerrain'
 ]
 
 
 from .objects import DeleteObjects
+from .terrain import DeleteTerrain
