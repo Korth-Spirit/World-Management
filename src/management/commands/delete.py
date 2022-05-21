@@ -18,26 +18,44 @@
 # LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-from korth_spirit import Instance
-from korth_spirit.data import ObjectDeleteData
+import logging
+
 from korth_spirit.query import QueryEnum
-from korth_spirit.sdk import aw_object_delete
-from management.commands.iterator import Iterator
+from korth_spirit.sdk import (aw_delete_all_objects, aw_terrain_delete_all,
+                              aw_world_attributes_reset)
 
 
-class DeleteObjects(Iterator):
-    def __init__(self, instance: Instance):
+class Delete:
+    def __init__(
+        self,
+        query_type: str
+    ):
         """
-        Initializes the Delete Objects command.
+        Initializes the Save Query command.
 
         Args:
             instance (Instance): The instance.
+            query_type (str): The type of query to perform. { "attributes", "objects", "terrain" }
+            file_name (str): The file name.
+            binary_mode (bool): Whether or not to save the data in binary mode.
         """
-        self._instance = instance
+        _query = query_type\
+            .upper()\
+            .removesuffix('S')\
+            .replace('ATTRIBUTE', 'WORLD')
 
-        super().__init__(
-            self._instance.query(QueryEnum.OBJECT),
-            lambda data: aw_object_delete(
-                ObjectDeleteData(data.number, data.x, data.z)
-            )
-        )
+        self._type = query_type
+        self._query = QueryEnum[_query]
+    
+    def execute(self):
+        """
+        Executes the command.
+        """
+        logging.info(f'Deleting {self._type}')
+        
+        if self._query == QueryEnum.OBJECT:
+            aw_delete_all_objects()
+        elif self._query == QueryEnum.TERRAIN:
+            aw_terrain_delete_all()
+        elif self._query == QueryEnum.WORLD:
+            aw_world_attributes_reset()

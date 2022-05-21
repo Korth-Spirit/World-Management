@@ -20,8 +20,8 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from argparse import Namespace
 
-from korth_spirit.instance import Instance
 import management.commands as C
+from korth_spirit.instance import Instance
 from management.protocols import Invoker
 
 
