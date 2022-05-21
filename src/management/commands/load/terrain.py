@@ -18,14 +18,35 @@
 # LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+from korth_spirit import Instance
+from korth_spirit.data import TerrainNodeData
+from korth_spirit.query import QueryEnum
+from korth_spirit.sdk import aw_terrain_load_node
 
-__all__ = [
-    'LoadAttributes',
-    'LoadObjects',
-    'LoadTerrain'
-]
+from .query import LoadQuery
 
 
-from .attributes import LoadAttributes
-from .objects import LoadObjects
-from .terrain import LoadTerrain
+class LoadTerrain(LoadQuery):
+    def __init__(
+        self,
+        instance: Instance,
+        file_name: str = 'backup.json',
+        binary_mode: bool = False
+    ):
+        """
+        Initializes the Load Objects command.
+
+        Args:
+            instance (Instance): The instance to load the objects into.
+            file_name (str): The file name to load the objects from.
+            binary_mode (bool): Whether or not to load the data in binary mode
+        """
+        super().__init__(
+            instance,
+            QueryEnum.TERRAIN,
+            lambda data: aw_terrain_load_node(
+                TerrainNodeData(**data)
+            ),
+            file_name,
+            binary_mode
+        )

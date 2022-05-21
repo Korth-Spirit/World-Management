@@ -50,4 +50,12 @@ def register(invoker: Invoker, instance: Instance, args: Namespace):
                 file_name=args.file,
                 binary_mode=args.binary
             )
+        )\
+        .register(
+            'LOAD TERRAIN',
+            commands.LoadTerrain(
+                instance=instance,
+                file_name=args.file,
+                binary_mode=args.binary
+            )
         )
