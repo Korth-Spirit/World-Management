@@ -24,8 +24,6 @@ import logging
 from management.instance import ReceiverInstance
 from management.invoker import LocalInvoker
 
-from .commands import register as register_commands
-
 
 def main() -> None:
     """
@@ -95,4 +93,5 @@ def main() -> None:
 
         action = 'LOAD' if arguments.load else 'SAVE'
         action = 'DELETE' if arguments.delete else action
+
         actor.invoke(f"{action} {arguments.type.upper()}")
