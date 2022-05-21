@@ -89,7 +89,7 @@ def main() -> None:
         logging.basicConfig(level=logging.DEBUG)
 
     with ReceiverInstance() as instance:
-        actor = LocalInvoker.create_loaded(instance)
+        actor = LocalInvoker.create_loaded(instance, arguments)
 
         action = 'LOAD' if arguments.load else 'SAVE'
         action = 'DELETE' if arguments.delete else action

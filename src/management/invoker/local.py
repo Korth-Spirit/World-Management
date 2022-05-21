@@ -91,19 +91,20 @@ class LocalInvoker:
         return self
 
     @staticmethod
-    def create_loaded(instance: Instance) -> "LocalInvoker":
+    def create_loaded(instance: Instance, args) -> "LocalInvoker":
         """
         Creates a loaded instance of the LocalInvoker class
         This invoker has preloaded commands targetting the instance.
 
         Args:
             instance (Instance): The instance.
+            args (dict): The arguments.
 
         Returns:
             LocalInvoker: Fluent interface.
         """
         invoker = LocalInvoker()
         
-        register(invoker, instance)
+        register(invoker, instance, args)
 
         return invoker
