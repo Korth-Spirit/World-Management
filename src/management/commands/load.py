@@ -24,9 +24,8 @@ from common.file import load
 from common.func import on_each
 from korth_spirit.data import ObjectLoadData, TerrainNodeData
 from korth_spirit.query import QueryEnum, WorldAttributeEnum
-from korth_spirit.sdk import (aw_object_load, aw_terrain_load_node,
-                              aw_world_attribute_set,
-                              aw_world_attributes_change)
+from korth_spirit.sdk import aw_object_load, aw_terrain_load_node
+from korth_spirit.sdk.write_data import write_data
 
 from .file_abc import FileABC
 
@@ -44,7 +43,7 @@ class Load(FileABC):
         elif self._query_type == QueryEnum.TERRAIN:
             aw_terrain_load_node(TerrainNodeData(**data))
         elif self._query_type == QueryEnum.WORLD:
-            aw_world_attribute_set(
+            write_data(
                 WorldAttributeEnum[data['name']].value,
                 data['value']
             )
@@ -65,6 +64,3 @@ class Load(FileABC):
             ),
             _receive
         )
-
-        if self._query == QueryEnum.WORLD:
-            aw_world_attributes_change()
