@@ -1,6 +1,8 @@
-# Korth-Spirit World Management
+# The Spirit Of Korth
 
-Libraries and tools relating to a world's management inside of Active Worlds and its universe products.
+The Spirit of Korth is a python wrapper for the Active Worlds Software Development Kit (SDK). Active Worlds is a trade mark of Active Worlds Inc. The SDK is a set of tools for developing games, bot, and extensions for the Active Worlds platform. The SDK and its license are available at http://www.activeworlds.com/sdk/download.htm. This project is not affiliated with Active Worlds Inc.
+
+The Spirit of Korth is licensed under the MIT license. All other code is owned by the author. The Spirit of Korth is not affiliated with Active Worlds Inc.
 
 # Notice
 
@@ -8,7 +10,7 @@ Th(is | ese) program(s) are written (Spirit of Korth | Korth-Spirit)'s Software 
 
 # License
 
-This project is licensed under the MIT license.
+This project, the Spirit of Korth, is licensed under the MIT license. All other code is owned by the author. The Spirit of Korth is not affiliated with Active Worlds Inc. This project is not affiliated with Active Worlds Inc. The license for Active Worlds Software Development Kit (SDK) is available at http://www.activeworlds.com/sdk/download.htm.
 
 # Contribution
 
