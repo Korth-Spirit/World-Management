@@ -18,9 +18,9 @@
 # LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-import management.commands as C
 from korth_spirit import Instance
-from management.invoker.registration import register
+
+import management.commands as C
 from management.protocols import Command
 
 
@@ -152,9 +152,3 @@ class LocalInvoker:
                     _s_factory('terrain', f"{args.file}_terrain")
                 )
             )
-
-
-        
-        register(invoker, instance, args)
-
-        return invoker
