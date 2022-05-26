@@ -18,6 +18,7 @@
 # LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+import management.commands as C
 from korth_spirit import Instance
 from management.invoker.registration import register
 from management.protocols import Command
@@ -103,7 +104,56 @@ class LocalInvoker:
         Returns:
             LocalInvoker: Fluent interface.
         """
+        def _l_factory(query_type: str, file_name: str = args.file):
+            return C.Load(instance, query_type, file_name, args.binary)
+
+        def _s_factory(query_type: str, file_name: str = args.file):
+            return C.Save(instance, query_type, file_name, args.binary)
+
+        actions: dict[str, callable] = {
+            'DELETE': C.Delete,
+            'LOAD': _l_factory,
+            'SAVE': _s_factory
+        }
+        items: list[str] = [
+            'ATTRIBUTES',
+            'OBJECTS',
+            'TERRAIN'
+        ]
+
         invoker = LocalInvoker()
+
+        for name, func in actions.items():
+            for item in items:
+                invoker.register(f"{name} {item}", func(item))
+            
+        return invoker()\
+            .register(
+                "DELETE ALL",
+                C.Aggregate(
+                    C.Delete('attributes'),
+                    C.Delete('objects'),
+                    C.Delete('terrain')
+                )
+            )\
+            .register(
+                "LOAD ALL",
+                C.Aggregate(
+                    _l_factory('attributes', f"{args.file}_attributes"),
+                    _l_factory('objects', f"{args.file}_objects"),
+                    _l_factory('terrain', f"{args.file}_terrain")
+                )
+            )\
+            .register(
+                "SAVE ALL",
+                C.Aggregate(
+                    _s_factory('attributes', f"{args.file}_attributes"),
+                    _s_factory('objects', f"{args.file}_objects"),
+                    _s_factory('terrain', f"{args.file}_terrain")
+                )
+            )
+
+
         
         register(invoker, instance, args)
 
