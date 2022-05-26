@@ -29,66 +29,66 @@ def main() -> None:
     """
     The main function.
     """
-    argument_parser = argparse.ArgumentParser(
-        prog="backup",
-        description="Korth Spirit World Backup Utility for Activeworlds"
+    parser = argparse.ArgumentParser(
+        prog="World Management CLI",
+        description="Korth Spirit World Management Command Line Utility for Activeworlds"
     )
-
-    argument_parser.add_argument(
-        'file',
-        help="File to use",
-        type=str,
-    )
-
-    argument_parser.add_argument(
-        '-b', '--binary',
-        help="If specified, files will be written in binary mode",
-        default=False,
-        action="store_true"
-    )
-
-    argument_parser.add_argument(
+    parser.add_argument(
         '-c', '--config',
         help="Configuration file to use",
         default="configuration.json",
         type=str
     )
-
-    argument_parser.add_argument(
+    parser.add_argument(
         '-t', '--type',
         help="Query type to use. Prefixed with <value>_",
         default="all",
         type=str,
         choices=["all", "terrain", "objects", "attributes"]
     )
-
-    argument_parser.add_argument(
+    parser.add_argument(
         '-v', '--verbose',
         help="If specified, debug logging will be enabled",
         default=False,
         action="store_true"
     )
 
-    exclusive_group = argument_parser.add_mutually_exclusive_group()
-    exclusive_group.add_argument(
-        '-l', '--load',
-        help="If specified, the instance will begin loading the specified --file",
+    file_arg_parser = argparse.ArgumentParser(add_help=False)
+    file_arg_parser.add_argument(
+        '-b', '--binary',
+        help="If specified, files will be written in binary mode",
         default=False,
         action="store_true"
     )
-    exclusive_group.add_argument(
-        '-d', '--delete',
-        help="If specified, the instance will begin deleting the specified --type",
-        default=False,
-        action="store_true"
+    file_arg_parser.add_argument(
+        'file',
+        help="File to use",
+        type=str,
     )
 
-    arguments = argument_parser.parse_args()
+    subparsers = parser.add_subparsers(dest='command', required=True)
+    subparsers.required = True
+    subparsers.add_parser(
+        'load',
+        help="Loads a world information from a file",
+        parents=[file_arg_parser]
+    )
+    subparsers.add_parser(
+        'save',
+        help="Saves a world information to a file",
+        parents=[file_arg_parser]
+    )
+    subparsers.add_parser(
+        'delete',
+         help='Deletes / resets a world\'s information'
+    )
+
+    arguments = parser.parse_args()
 
     if arguments.verbose:
         logging.basicConfig(level=logging.DEBUG)
 
-    with ReceiverInstance() as instance:
+    with ReceiverInstance(arguments.config) as instance:
         actor = LocalInvoker.create_loaded(instance, arguments)
 
         action = 'LOAD' if arguments.load else 'SAVE'

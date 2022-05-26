@@ -104,11 +104,11 @@ class LocalInvoker:
         Returns:
             LocalInvoker: Fluent interface.
         """
-        def _l_factory(query_type: str, file_name: str = args.file):
-            return C.Load(instance, query_type, file_name, args.binary)
+        def _l_factory(query_type: str, file_name: str = getattr(args, 'file', None)):
+            return C.Load(instance, query_type, file_name, getattr(args, 'binary', False))
 
-        def _s_factory(query_type: str, file_name: str = args.file):
-            return C.Save(instance, query_type, file_name, args.binary)
+        def _s_factory(query_type: str, file_name: str = getattr(args, 'file', None)):
+            return C.Save(instance, query_type, file_name, getattr(args, 'binary', False))
 
         actions: dict[str, callable] = {
             'DELETE': C.Delete,
@@ -127,7 +127,7 @@ class LocalInvoker:
             for item in items:
                 invoker.register(f"{name} {item}", func(item))
             
-        return invoker()\
+        invoker\
             .register(
                 "DELETE ALL",
                 C.Aggregate(
@@ -135,7 +135,12 @@ class LocalInvoker:
                     C.Delete('objects'),
                     C.Delete('terrain')
                 )
-            )\
+            )
+
+        if not getattr(args, 'file', None):
+            return
+
+        invoker\
             .register(
                 "LOAD ALL",
                 C.Aggregate(
