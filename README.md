@@ -1,3 +1,5 @@
+> **Warning** This project is no longer maintained.
+
 # Korth-Spirit World Management
 
 Libraries and tools relating to a world's management inside of Active Worlds and its universe products.
